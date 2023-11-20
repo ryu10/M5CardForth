@@ -601,6 +601,7 @@ static cell_t ResizeFile(cell_t fd, cell_t size);
   REQUIRED_SERIAL_SUPPORT \
   OPTIONAL_SERIAL2_SUPPORT \
   REQUIRED_ARDUINO_GPIO_SUPPORT \
+  OPTIONAL_FAST_LED \
   REQUIRED_SYSTEM_SUPPORT \
   REQUIRED_FILES_SUPPORT \
   OPTIONAL_LEDC_SUPPORT \
@@ -695,7 +696,9 @@ static cell_t ResizeFile(cell_t fd, cell_t size);
   Y(digitalWrite, digitalWrite(n1, n0); DROPn(2)) \
   Y(digitalRead, n0 = digitalRead(n0)) \
   Y(analogRead, n0 = analogRead(n0)) \
-  Y(pulseIn, n0 = pulseIn(n2, n1, n0); NIPn(2)) \
+  Y(pulseIn, n0 = pulseIn(n2, n1, n0); NIPn(2))
+
+#define OPTIONAL_FAST_LED \
   Y(addLeds, addLeds()) \
   Y(showLeds, leds[0] = CRGB(n2, n1, n0); FastLED.show(); DROPn(3))
 
