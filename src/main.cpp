@@ -17,9 +17,10 @@
 /* For M5 CardUpter */
 #define CONFIG_IDF_TARGET_ESP32S3
 #include <FastLED.h>
+#define PIN_LED    21   // G21
+#define NUM_LEDS   1
 CRGB leds[1];
-#define PIN_LED    21   // 本体フルカラーLEDの使用端子（G21）
-#define NUM_LEDS   1    // 本体フルカラーLEDの数
+
 void addLeds(void){
   FastLED.addLeds<WS2812B, PIN_LED, GRB>(leds, NUM_LEDS); 
 }
@@ -674,13 +675,7 @@ static cell_t ResizeFile(cell_t fd, cell_t size);
   XV(serial, "Serial.write", SERIAL_WRITE, n0 = USBSerial.write(b1, n0); NIP) \
   XV(serial, "Serial.flush", SERIAL_FLUSH, USBSerial.flush()) \
   XV(serial, "Serial.setDebugOutput", SERIAL_DEBUG_OUTPUT, USBSerial.setDebugOutput(n0); DROP) \
-  XV(serial, "Serial.write2", SERIAL_WRITE2, n0 = USBSerial.write(b1, n0); NIP) \
-  XV(serial, "Serial.addLeds", FASTLED_ADDLEDS, addLeds()) \
-  XV(serial, "Serial.show", FASTLED_SHOW , leds[0]=CRGB(n2, n1, n0); FastLED.show(); DROPn(3))
-
-#define OPTIONAL_FASTLED_SUPPORT \
-  XV(fastled, "FastLED.addLeds", FASTLED_ADDLEDS, addLeds())) \
-  XV(fastled, "FastLED.show", FASTLED_SHOW, leds[0]=CRGB(n2, n1, n0); FastLED.show(); DROPn(3))
+  XV(serial, "Serial.write2", SERIAL_WRITE2, n0 = USBSerial.write(b1, n0); NIP)
 
 #ifndef ENABLE_SERIAL2_SUPPORT
 # define OPTIONAL_SERIAL2_SUPPORT
