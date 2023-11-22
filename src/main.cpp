@@ -25,6 +25,12 @@ void addLeds(void){
   FastLED.addLeds<WS2812B, PIN_LED, GRB>(leds, NUM_LEDS); 
 }
 
+#define LGFX_USE_V1
+#include <LovyanGFX.hpp>
+int lgfx_setup(){
+  
+}
+
 /*
  * ESP32forth v7.0.7.15
  * Revision: 564a8fc68b545ebeb3ab
