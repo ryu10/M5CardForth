@@ -37,7 +37,42 @@ LED OUTPUT pinMode
 
 2. RGB Digtal driver for M5Stamp
 
+M5Stamp C3 の三色 LED を制御する
+
+1. プロジェクトに FastLED ライブラリを追加
+2. main.cpp 冒頭に次のコードを追加
 
 
+```
+/* For M5 CardUpter */
+#define CONFIG_IDF_TARGET_ESP32S3
+#include <FastLED.h>
+#define PIN_LED    21   // G21
+#define NUM_LEDS   1
+CRGB leds[1];
 
+void addLeds(void){
+  FastLED.addLeds<WS2812B, PIN_LED, GRB>(leds, NUM_LEDS); 
+}
+```
 
+" `#define REQUIRED_ARDUINO_GPIO_SUPPORT \` " ブロックの下辺りに次のコードを追加
+
+```
+#define OPTIONAL_FAST_LED \
+  Y(addLeds, addLeds()) \
+  Y(showLeds, leds[0] = CRGB(n2, n1, n0); FastLED.show(); DROPn(3))
+```
+
+ここで読み込む
+
+```
+  REQUIRED_ARDUINO_GPIO_SUPPORT \
+  OPTIONAL_FAST_LED \
+```
+
+ビルド、書き込みして `fastLeds.fs` を読み込む。以下のワードが使えるようになる
+
+`showLeds ( r g b -- )`
+
+`redLED greenLED blueLED whiteLED offLED`
