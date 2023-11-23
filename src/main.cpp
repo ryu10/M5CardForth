@@ -25,10 +25,82 @@ void addLeds(void){
   FastLED.addLeds<WS2812B, PIN_LED, GRB>(leds, NUM_LEDS); 
 }
 
-#define LGFX_USE_V1
-#include <LovyanGFX.hpp>
-int lgfx_setup(){
-  
+#include "hal_display.hpp"
+
+LGFX_Device* _display;
+LGFX_Sprite* _canvas;
+LGFX_Sprite* _canvas_system_bar;
+LGFX_Sprite* _canvas_keyboard_bar;
+#define _canvas_clear() _canvas->fillScreen(THEME_COLOR_BG)
+#define _canvas_update() _canvas->pushSprite(0,0)
+#define _display_clear() _display->fillScreen(THEME_COLOR_BG)
+// #define _canvas_clear() _canvas->fillScreen(TFT_WHITE)
+
+void lcdInit(void){
+    // Display 
+  // USBSerial.print("init LCD: ");
+
+  _display = new LGFX_Cardputer;
+  _display->init();
+  _display->setRotation(1);
+
+  _display->fillScreen(THEME_COLOR_BG); // clear
+  _display->setTextScroll(true);
+  _display->setBaseColor(THEME_COLOR_BG);
+  _display->setTextColor(THEME_COLOR_ICON, THEME_COLOR_BG);
+  _display->setFont(FONT_REPL);
+  _display->setTextSize(1);
+  _display->setCursor(0, 0);
+  _display->printf("INIT LCD:\n");
+}
+
+void lcdPrint(int c){
+  _display->printf("%c", c);
+}
+
+int lcdPrint(uint8_t *s, int size){
+  uint8_t str[16];
+  for(int t = 0; t<size; t++){
+    str[0] = *s++;
+    str[1] = 0;
+    _display->print((const char *)str);
+  }
+  return size;
+}
+
+#include "keyboard.h"
+KEYBOARD::Keyboard* _keyboard;
+int _last_key_num;
+std::string _input_buffer;
+
+void kbdInit(void){
+  _keyboard = new KEYBOARD::Keyboard;
+  _keyboard->init();
+  _last_key_num = 0;
+  _input_buffer = "";
+}
+
+size_t kbdGet(char *buf, int count){
+  USBSerial.print("g ");
+  // If enter 
+  if (_keyboard->keysState().enter){
+    *buf = 0x0d;
+  } else {
+    *buf = (char)(_input_buffer.c_str()[0]);
+  }
+  _last_key_num = _keyboard->keyList().size();
+  _input_buffer = ""; // Reset buffer
+  return 1;
+}
+
+int kbdAvailable(void){
+  USBSerial.print("c ");
+  _keyboard->updateKeysState();
+  // If changed 
+  if (_keyboard->keyList().size() != _last_key_num){
+    return _last_key_num;
+  }
+  return -1;
 }
 
 /*
@@ -608,6 +680,7 @@ static cell_t ResizeFile(cell_t fd, cell_t size);
   OPTIONAL_SERIAL2_SUPPORT \
   REQUIRED_ARDUINO_GPIO_SUPPORT \
   OPTIONAL_FAST_LED \
+  OPTIONAL_LCD \
   REQUIRED_SYSTEM_SUPPORT \
   REQUIRED_FILES_SUPPORT \
   OPTIONAL_LEDC_SUPPORT \
@@ -675,14 +748,17 @@ static cell_t ResizeFile(cell_t fd, cell_t size);
   XV(internals, "RAW-TERMINATE", RAW_TERMINATE, ESP.restart())
 
 #define REQUIRED_SERIAL_SUPPORT \
-  XV(serial, "Serial.begin", SERIAL_BEGIN, USBSerial.begin(tos); DROP) \
+  XV(serial, "Serial.begin", SERIAL_BEGIN, USBSerial.begin(tos); lcdInit(); kbdInit(); DROP) \
   XV(serial, "Serial.end", SERIAL_END, USBSerial.end()) \
-  XV(serial, "Serial.available", SERIAL_AVAILABLE, PUSH USBSerial.available()) \
-  XV(serial, "Serial.readBytes", SERIAL_READ_BYTES, n0 = USBSerial.readBytes(b1, n0); NIP) \
-  XV(serial, "Serial.write", SERIAL_WRITE, n0 = USBSerial.write(b1, n0); NIP) \
+  XV(serial, "Serial.available", SERIAL_AVAILABLE, PUSH kbdAvailable()) \
+  XV(serial, "Serial.readBytes", SERIAL_READ_BYTES, n0 = kbdGet((char *)b1,n0); NIP) \
+  XV(serial, "Serial.write", SERIAL_WRITE, n0 = USBSerial.write(b1, n0); lcdPrint(b1, n0); NIP) \
+  XV(serial, "Serial.lcdWrite", SERIAL_LCDWRITE, n0 = lcdPrint(b1, n0); NIP) \
   XV(serial, "Serial.flush", SERIAL_FLUSH, USBSerial.flush()) \
-  XV(serial, "Serial.setDebugOutput", SERIAL_DEBUG_OUTPUT, USBSerial.setDebugOutput(n0); DROP) \
-  XV(serial, "Serial.write2", SERIAL_WRITE2, n0 = USBSerial.write(b1, n0); NIP)
+  XV(serial, "Serial.setDebugOutput", SERIAL_DEBUG_OUTPUT, USBSerial.setDebugOutput(n0); DROP) 
+
+// XV(serial, "Serial.available", SERIAL_AVAILABLE, PUSH USBSerial.available()) 
+//   XV(serial, "Serial.readBytes", SERIAL_READ_BYTES, n0 = kbdGet((char *)b1,n0); NIP) 
 
 #ifndef ENABLE_SERIAL2_SUPPORT
 # define OPTIONAL_SERIAL2_SUPPORT
@@ -707,6 +783,10 @@ static cell_t ResizeFile(cell_t fd, cell_t size);
 #define OPTIONAL_FAST_LED \
   Y(addLeds, addLeds()) \
   Y(showLeds, leds[0] = CRGB(n2, n1, n0); FastLED.show(); DROPn(3))
+
+#define OPTIONAL_LCD \
+  Y(lcdInit, lcdInit()) \
+  Y(lcdPrint, lcdPrint(n0); DROP) 
 
 #define REQUIRED_FILES_SUPPORT \
   X("R/O", R_O, PUSH O_RDONLY) \
