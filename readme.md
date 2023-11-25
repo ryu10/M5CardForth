@@ -12,4 +12,10 @@ A quick hack with :
 
 Build/flash the project in [Platformio](https://platformio.org/).
 
+## Todo
+
+* backspace
+* switch cardputer console/serial
+* sd
+
 Have fun.
