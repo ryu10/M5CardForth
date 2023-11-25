@@ -16,6 +16,6 @@ Build/flash the project in [Platformio](https://platformio.org/).
 
 * backspace
 * switch cardputer console/serial
-* sd
+* sdcard
 
 Have fun.
