@@ -14,8 +14,10 @@
  * limitations under the License.
 */
 
-/* For M5 CardUpter */
+/* Espressif ESP32-S3 is the MCU of M5CardPuter */
 #define CONFIG_IDF_TARGET_ESP32S3
+
+/* FastLED */
 #include <FastLED.h>
 #define PIN_LED    21   // G21
 #define NUM_LEDS   1
@@ -25,37 +27,50 @@ void addLeds(void){
   FastLED.addLeds<WS2812B, PIN_LED, GRB>(leds, NUM_LEDS); 
 }
 
+/* LGFX Display */
 #include "hal_display.hpp"
 
 LGFX_Device* _display;
-LGFX_Sprite* _canvas;
-LGFX_Sprite* _canvas_system_bar;
-LGFX_Sprite* _canvas_keyboard_bar;
-#define _canvas_clear() _canvas->fillScreen(THEME_COLOR_BG)
-#define _canvas_update() _canvas->pushSprite(0,0)
-#define _display_clear() _display->fillScreen(THEME_COLOR_BG)
-// #define _canvas_clear() _canvas->fillScreen(TFT_WHITE)
+LGFX_Sprite* _canvas_text;
+LGFX_Sprite* _canvas_gfx;
 
 void lcdInit(void){
-    // Display 
-  // USBSerial.print("init LCD: ");
-
+  // Cardputer Display has 240*135 screen
+  // set the display area (canvas) to 232 x 128, origin at (4, 4)
   _display = new LGFX_Cardputer;
   _display->init();
   _display->setRotation(1);
 
-  _display->fillScreen(THEME_COLOR_BG); // clear
-  _display->setTextScroll(true);
-  _display->setBaseColor(THEME_COLOR_BG);
-  _display->setTextColor(THEME_COLOR_ICON, THEME_COLOR_BG);
-  _display->setFont(FONT_REPL);
-  _display->setTextSize(1);
-  _display->setCursor(0, 0);
-  _display->printf("INIT LCD:\n");
+  _display->fillScreen(TFT_DARKCYAN); // clear
+  // _display->setTextScroll(true);
+  // _display->setBaseColor(THEME_COLOR_BG);
+  // _display->setTextColor(THEME_COLOR_ICON, THEME_COLOR_BG);
+  // _display->setFont(FONT_REPL);
+  // _display->setTextSize(1);
+  // _display->setCursor(0, 0);
+  // _display->printf("INIT LCD:\n");
+
+  _canvas_text = new LGFX_Sprite(_display);
+  // _canvas_text->setColorDepth(8); // 16color palette
+  if(_canvas_text->createSprite(232, 128) == nullptr){
+      USBSerial.write("INIT SPRITE FAILED!\n");
+      while(true){;}
+  };
+  _canvas_text->setTextScroll(true);
+  _canvas_text->setBaseColor(TFT_BLACK);
+  _canvas_text->fillScreen(TFT_BLACK);
+  _canvas_text->setTextColor(TFT_ORANGE,TFT_BLACK);
+  _canvas_text->setFont(FONT_REPL);
+  _canvas_text->setTextSize(1);
+  _canvas_text->setCursor(0, 0);
+  _canvas_text->printf("    M5Cardputer Forth\n");
+  _canvas_text->setTextColor(TFT_GREEN,TFT_BLACK);
+  _canvas_text->pushSprite(4,4);
 }
 
 void lcdPrint(int c){
-  _display->printf("%c", c);
+  _canvas_text->printf("%c", c);
+  _canvas_text->pushSprite(4,4);
 }
 
 int lcdPrint(uint8_t *s, int size){
@@ -63,42 +78,56 @@ int lcdPrint(uint8_t *s, int size){
   for(int t = 0; t<size; t++){
     str[0] = *s++;
     str[1] = 0;
-    _display->print((const char *)str);
+    _canvas_text->print((const char *)str);
+    _canvas_text->pushSprite(4,4);
   }
   return size;
 }
 
-#include "keyboard.h"
-KEYBOARD::Keyboard* _keyboard;
-int _last_key_num;
-std::string _input_buffer;
+/* M5Cardputer Keyboard */
+/* #include "M5Cardputer.h" // Incompatible! */
+#include "utility/Keyboard.h"
+
+Keyboard_Class Keyboard = Keyboard_Class();
+String _keyboard_buf = "";
 
 void kbdInit(void){
-  _keyboard = new KEYBOARD::Keyboard;
-  _keyboard->init();
-  _last_key_num = 0;
-  _input_buffer = "";
+  Keyboard.begin();
 }
 
 size_t kbdGet(char *buf, int count){
-  USBSerial.print("g ");
-  // If enter 
-  if (_keyboard->keysState().enter){
-    *buf = 0x0d;
-  } else {
-    *buf = (char)(_input_buffer.c_str()[0]);
+  if(_keyboard_buf.length() > 0){
+    *buf = (char)_keyboard_buf[_keyboard_buf.length() -1];
+    _keyboard_buf.clear();
+    return 1;
   }
-  _last_key_num = _keyboard->keyList().size();
-  _input_buffer = ""; // Reset buffer
-  return 1;
+  return 0;
 }
 
 int kbdAvailable(void){
-  USBSerial.print("c ");
-  _keyboard->updateKeysState();
-  // If changed 
-  if (_keyboard->keyList().size() != _last_key_num){
-    return _last_key_num;
+  // M5Cardputer.update();
+  Keyboard.updateKeyList();
+  Keyboard.updateKeysState();
+  if (Keyboard.isChange()) {
+      if (Keyboard.isPressed()) {
+          Keyboard_Class::KeysState status = Keyboard.keysState();
+          for (auto i : status.word) {
+              _keyboard_buf += i;
+              return 1;
+          }
+          if (status.del) {
+              _keyboard_buf += (char)0x08; // ASCII BS
+              return 1;
+          }
+          if (status.enter) {
+              _keyboard_buf += "\n"; // ASCII LF
+              return 1;
+          }
+          else{
+            _keyboard_buf = ""; // clear anyway
+            return -1;
+          }
+      }
   }
   return -1;
 }
@@ -748,17 +777,19 @@ static cell_t ResizeFile(cell_t fd, cell_t size);
   XV(internals, "RAW-TERMINATE", RAW_TERMINATE, ESP.restart())
 
 #define REQUIRED_SERIAL_SUPPORT \
-  XV(serial, "Serial.begin", SERIAL_BEGIN, USBSerial.begin(tos); lcdInit(); kbdInit(); DROP) \
+  XV(serial, "Serial.begin", SERIAL_BEGIN, USBSerial.begin(tos); DROP) \
   XV(serial, "Serial.end", SERIAL_END, USBSerial.end()) \
   XV(serial, "Serial.available", SERIAL_AVAILABLE, PUSH kbdAvailable()) \
   XV(serial, "Serial.readBytes", SERIAL_READ_BYTES, n0 = kbdGet((char *)b1,n0); NIP) \
-  XV(serial, "Serial.write", SERIAL_WRITE, n0 = USBSerial.write(b1, n0); lcdPrint(b1, n0); NIP) \
+  XV(serial, "Serial.write", SERIAL_WRITE, n0 = lcdPrint(b1, n0); NIP) \
   XV(serial, "Serial.lcdWrite", SERIAL_LCDWRITE, n0 = lcdPrint(b1, n0); NIP) \
   XV(serial, "Serial.flush", SERIAL_FLUSH, USBSerial.flush()) \
   XV(serial, "Serial.setDebugOutput", SERIAL_DEBUG_OUTPUT, USBSerial.setDebugOutput(n0); DROP) 
 
-// XV(serial, "Serial.available", SERIAL_AVAILABLE, PUSH USBSerial.available()) 
-//   XV(serial, "Serial.readBytes", SERIAL_READ_BYTES, n0 = kbdGet((char *)b1,n0); NIP) 
+  // XV(serial, "Serial.available", SERIAL_AVAILABLE, PUSH USBSerial.available()) \
+  // XV(serial, "Serial.readBytes", SERIAL_READ_BYTES, n0 = USBSerial.readBytes(b1, n0); NIP) \ 
+  // XV(serial, "Serial.available", SERIAL_AVAILABLE, PUSH kbdAvailable()) \
+  // XV(serial, "Serial.readBytes", SERIAL_READ_BYTES, n0 = kbdGet((char *)b1,n0); NIP) \
 
 #ifndef ENABLE_SERIAL2_SUPPORT
 # define OPTIONAL_SERIAL2_SUPPORT
@@ -3197,6 +3228,10 @@ static cell_t ResizeFile(cell_t fd, cell_t size) {
   return 0;
 }
 void setup() {
+  // for M5Cardputer
+  lcdInit();  // do disp->init() and createSprite() as eaarly as possible
+  kbdInit(); 
+  // end "for M5Cardputer"
   cell_t fh = heap_caps_get_free_size(MALLOC_CAP_INTERNAL);
   cell_t hc = heap_caps_get_largest_free_block(MALLOC_CAP_INTERNAL);
   if (fh - hc < MINIMUM_FREE_SYSTEM_HEAP) {
