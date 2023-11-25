@@ -63,7 +63,7 @@ void lcdInit(void){
   _canvas_text->setFont(FONT_REPL);
   _canvas_text->setTextSize(1);
   _canvas_text->setCursor(0, 0);
-  _canvas_text->printf("    M5Cardputer Forth\n");
+  _canvas_text->printf("     M5Cardputer Forth\n");
   _canvas_text->setTextColor(TFT_GREEN,TFT_BLACK);
   _canvas_text->pushSprite(4,4);
 }
