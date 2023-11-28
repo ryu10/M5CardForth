@@ -33,7 +33,7 @@ Supported keys:
 * `Shift`
 * `Enter` and `BS`
 
-The ctrl/opt/al/fn/esc keys do not work.
+The ctrl/opt/alt/fn/esc keys do not work.
 
 ## Add'l Internal words
 

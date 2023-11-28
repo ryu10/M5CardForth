@@ -32,7 +32,7 @@ M5Cardputer を使って ESP32forth コンソールをざっくり作ってい�
 * `Shift` キー ('`Aa`')
 * `Enter` キーと `BS` キー
 
-ctrl/opt/al/fn/esc キーは機能しません。
+ctrl/opt/alt/fn/esc キーは機能しません。
 
 ## サンプルコード
 
@@ -42,7 +42,7 @@ ctrl/opt/al/fn/esc キーは機能しません。
 
 [forth/M5StampS3-gpio.fs](forth/M5StampS3-gpio.fs) : Grove PortA の G1 と G2 を制御
 
-Serial Monitor コンソールにコピペして使います。入力バッファに上限があるため大量のテキストを一度に貼り付けられません。複数回に分けてコピペしてください。
+Serial Monitor コンソールにコピペして使います。入力バッファに上限があるためコンソールには大量のテキストを一度に貼り付けられません。複数回に分けてコピペしてください。
 
 ## 追加 Forth ワード
 
