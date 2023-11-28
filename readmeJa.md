@@ -16,7 +16,7 @@ M5Cardputer を使って ESP32forth コンソールをざっくり作ってい�
 * [LovyanGFX](https://github.com/lovyan03/LovyanGFX)
 * [FastLED](https://github.com/FastLED/FastLED)
 
-プロジェクトは [Platformio](https://platformio.org/) でビルド、書き込みしてください。
+プロジェクトは [Platformio](https://platformio.org/) でビルド、書き込みできます。
 
 ## コンソール
 
@@ -42,7 +42,7 @@ ctrl/opt/al/fn/esc キーは機能しません。
 
 [forth/M5StampS3-gpio.fs](forth/M5StampS3-gpio.fs) : Grove PortA の G1 と G2 を制御
 
-Serial Monitor コンソールにコピペしてください。入力バッファに上限があるため大量のテキストを一度に貼り付けられません。複数回に分けてコピペします。
+Serial Monitor コンソールにコピペして使います。入力バッファに上限があるため大量のテキストを一度に貼り付けられません。複数回に分けてコピペしてください。
 
 ## 追加 Forth ワード
 

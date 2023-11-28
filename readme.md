@@ -50,7 +50,7 @@ Newly defined words to access Cardputer features. Currently under development, t
 * sd card
 * sound 
 * mic
-* ir
+* (ir)
 * (clock)
 * (wifi)
 
