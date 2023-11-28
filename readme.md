@@ -1,4 +1,4 @@
-# M5CardForth (beta)
+# M5CardForth (alpha)
 
 [EN|[JA](readmeJa.md)]
 
@@ -6,7 +6,10 @@
 
 ## Summary 
 
-A simple console for ESP32forth.
+A simple console for M5Cardputer + ESP32forth.
+
+Everything is in alpha state, WIP.
+
 The following components are roughly combined:
 
 * [ueforth](https://github.com/flagxor/ueforth)
@@ -18,15 +21,15 @@ Build / flash the project with [Platformio](https://platformio.org/).
 
 ## Console
 
-At startup, the console reads USBSerial. Open PlatformIO : Serial Console and type from your computer. 
-
-To use the M5Cardputer keyboard, type `m5key-on`. 
+At startup, the console reads USBSerial input. Open `PlatformIO : Serial Console` and type on your computer. To use the M5Cardputer keyboard, type `m5key-on`. 
 
 The following words can be used to switch the console I/O : `m5key-on m5key-off m5type-on m5type-off`
 
+## Cardputer keyboard
+
 Supported keys:
 
-* Alfa-numeric and symbols
+* Alphanumeric and symbols
 * `Shift`
 * `Enter` and `BS`
 
@@ -34,34 +37,16 @@ The ctrl/opt/al/fn/esc keys do not work.
 
 ## Add'l Internal words
 
-```
-( Cardupter console )
-m5type-on ( -- ) ( use Cardputer display )
-m5type-off ( -- ) ( use serial output )
-m5key-on ( -- ) ( use Cardputer keyboard )
-m5key-off ( -- ) ( use serial input )
-m5-key ( -- n ) 
-m5-key? ( -- n )
-m5-type ( a n -- ) 
+Newly defined words to access Cardputer features. Currently under development, the specs will be changed in the future.
 
-( RGB Led : FastLED library )
-showLeds ( n n n -- )
-offLED ( -- )
-redLED ( -- )
-greenLED ( -- )
-blueLED ( -- )
-whiteLED ( -- )
-
-(Arduino enhancement)
-delay ( n -- )
-``` 
+-> ([See this page](cpwords.md))
 
 ## Todo
 
 * switch console/serial ✅
 * rgb led ✅
 * backspace ✅
-* graphics 
+* graphics ✅
 * sd card
 * sound 
 * mic

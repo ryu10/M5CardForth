@@ -1,4 +1,4 @@
-# M5CardForth (beta)
+# M5CardForth (alpha)
 
 [[EN](readme.md)|JA]
 
