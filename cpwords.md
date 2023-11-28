@@ -1,4 +1,4 @@
-# Additional words for M5CardPuter
+# Additional words for M5Cardputer
 
 ```
 ( Cardupter console )

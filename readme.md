@@ -1,6 +1,6 @@
 # M5CardForth (alpha)
 
-[EN|[JA](readmeJa.md)]
+[EN|[日本語](readmeJa.md)]
 
 ![M5CardForth](media/M5CardForth.png)
 
