@@ -21,7 +21,7 @@ Build / flash the project with [Platformio](https://platformio.org/).
 
 ## Console
 
-At startup, the console reads USBSerial input. Open `PlatformIO : Serial Console` and type on your computer. To use the M5Cardputer keyboard, type `m5key-on`. 
+At startup, the console reads from the USBSerial input. Open `PlatformIO : Serial Console` and type on your computer. To use the M5Cardputer keyboard, type `m5key-on`. 
 
 The following words can be used to switch the console I/O : `m5key-on m5key-off m5type-on m5type-off`
 
