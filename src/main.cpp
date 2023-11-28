@@ -41,36 +41,173 @@ void lcdInit(void){
   _display->init();
   _display->setRotation(1);
 
-  _display->fillScreen(TFT_DARKCYAN); // clear
-  // _display->setTextScroll(true);
-  // _display->setBaseColor(THEME_COLOR_BG);
-  // _display->setTextColor(THEME_COLOR_ICON, THEME_COLOR_BG);
-  // _display->setFont(FONT_REPL);
-  // _display->setTextSize(1);
-  // _display->setCursor(0, 0);
-  // _display->printf("INIT LCD:\n");
+  _display->fillScreen(TFT_BLACK); // clear
 
   _canvas_text = new LGFX_Sprite(_display);
-  // _canvas_text->setColorDepth(8); // 16color palette
-  if(_canvas_text->createSprite(232, 128) == nullptr){
-      USBSerial.write("INIT SPRITE FAILED!\n");
+  _canvas_text->setColorDepth(4); // 16color palette
+  #define CANVAS_TEXT_X 232
+  #define CANVAS_TEXT_Y 128
+  if(_canvas_text->createSprite(CANVAS_TEXT_X, CANVAS_TEXT_Y) == nullptr){
+      USBSerial.write("INIT TEXT SPRITE FAILED!\n");
       while(true){;}
   };
+  // _canvas_text->setPaletteColor(15, 0xffffff);
+  _canvas_text->setPaletteColor(12, TFT_ORANGE);
+  _canvas_text->setPaletteColor(14, 0x00ff00U);
   _canvas_text->setTextScroll(true);
-  _canvas_text->setBaseColor(TFT_BLACK);
-  _canvas_text->fillScreen(TFT_BLACK);
-  _canvas_text->setTextColor(TFT_ORANGE,TFT_BLACK);
-  _canvas_text->setFont(FONT_REPL);
+  _canvas_text->setBaseColor(0);
+  _canvas_text->fillScreen(0);
+  _canvas_text->setFont(FONT_REPL); // efontCN_16 (8x16px font)
+#define CN16_width 8
+#define CN16_height 16
   _canvas_text->setTextSize(1);
-  _canvas_text->setCursor(0, 0);
-  _canvas_text->printf("     M5Cardputer Forth\n");
-  _canvas_text->setTextColor(TFT_GREEN,TFT_BLACK);
-  _canvas_text->pushSprite(4,4);
+  _canvas_text->setCursor(6*CN16_width, 0);
+  _canvas_text->setTextColor(12,0);
+  _canvas_text->printf("M5Cardputer Forth\n");
+  _canvas_text->setTextColor(14,0);
+  _canvas_text->pushSprite(4,4,0);
 }
 
-void lcdPrint(int c){
-  _canvas_text->printf("%c", c);
+void lcdSetcursor(int x, int y){
+  _canvas_text->setCursor(x * CN16_width, y * CN16_height);
+}
+
+void lcdHome(void){
+  _canvas_text->fillScreen(TFT_BLACK);
+  _canvas_text->setCursor(0, 0);
+}
+
+bool _canvas_gfx_visible = false;
+
+void lcdGfxInit(void){
+  _canvas_gfx = new LGFX_Sprite(_display);
+  _canvas_gfx->setColorDepth(8); // 256color
+  _canvas_gfx->createPalette(); // Palette
+  #define CANVAS_GFX_X 232
+  #define CANVAS_GFX_Y 128
+  if(_canvas_gfx->createSprite(CANVAS_GFX_X, CANVAS_GFX_Y) == nullptr){
+      USBSerial.write("INIT GRAPHICS SPRITE FAILED!\n");
+      while(true){;}
+  };
+  _canvas_gfx->fillScreen(TFT_BLACK);
+  _canvas_text->setPaletteColor(200, TFT_WHITE);
+
+}
+
+// fillScreen    (                color);  // 画面全体の塗り潰し
+void lcdGfxFillScreen(int color){
+  _canvas_gfx->fillScreen    (                color);  // 画面全体の塗り潰し
+}
+// drawPixel     ( x, y         , color);  // 点
+void lcdGfxPset(int x, int y, int col){
+  _canvas_gfx->drawPixel(x, y, col);
+}
+// drawFastVLine ( x, y   , h   , color);  // 垂直線
+void lcdGfxDrawFastVLine(int x, int y, int h, int color){
+  _canvas_gfx->drawFastVLine( x,  y   ,  h   , color);  // 垂直線
+}
+// drawFastHLine ( x, int y, w      , color);  // 水平線
+void lcdGfxDrawFastHLine (int x, int y, int w, int color){
+  _canvas_gfx->drawFastHLine ( x, y, w      , color);  // 水平線
+}
+// drawRect      ( x, y, w, h   , color);  // 矩形の外周
+void lcdGfxDrawRect (int x, int y, int w, int h, int color){
+  _canvas_gfx->drawRect      ( x, y, w, h   , color);  // 矩形の外周
+}
+// fillRect      ( x, y, w, h   , color);  // 矩形の塗り
+void lcdGfxFillRect (int  x, int y, int w, int h   , int color){
+  _canvas_gfx->fillRect      ( x, y, w, h   , color);  // 矩形の塗り
+}
+// drawRoundRect ( x, y, w, h, r, color);  // 角丸の矩形の外周
+void lcdGfxDrawRoundRect(int x, int y, int w, int h, int r, int color){
+  _canvas_gfx->drawRoundRect ( x, y, w, h, r, color);  // 角丸の矩形の外周
+}
+// fillRoundRect ( x, y, w, h, r, color);  // 角丸の矩形の塗り
+void lcdGfxFillRoundRect (int x, int y, int w, int h, int r, int color){
+  _canvas_gfx->fillRoundRect ( x, y, w, h, r, color);  // 角丸の矩形の塗り
+}
+// drawCircle    ( x, y      , r, color);  // 円の外周
+void lcdGfxDrawCircle    (int x, int y      , int r, int color){
+  _canvas_gfx->drawCircle    ( x, y      , r, color);  // 円の外周
+}
+// fillCircle    ( x, y      , r, color);  // 円の塗り
+void lcdGfxFillCircle    (int x, int y      , int r, int color){
+  _canvas_gfx->fillCircle    ( x, y      , r, color);  // 円の塗り
+}
+// drawEllipse   ( x, y, rx, ry , color);  // 楕円の外周
+void lcdGfxDrawEllipse   (int x, int y, int rx, int ry , int color){
+  _canvas_gfx->drawEllipse   ( x, y, rx, ry , color);  // 楕円の外周
+}
+// fillEllipse   ( x, y, rx, ry , color);  // 楕円の塗り
+void lcdGfxFillEllipse   (int x, int y, int rx, int ry , int color){
+  _canvas_gfx->fillEllipse   ( x, y, rx, ry , color);  // 楕円の塗り
+}
+// drawLine      ( x0, y0, x1, y1        , color); // ２点間の直線
+void lcdGfxDrawLine      (int x0, int y0, int x1, int y1        , int color){
+  _canvas_gfx->drawLine      ( x0, y0, x1, y1        , color); // ２点間の直線
+}
+// drawTriangle  ( x0, y0, x1, y1, x2, y2, color); // ３点間の三角形の外周
+void lcdGfxDrawTriangle  (int x0, int y0, int x1, int y1, int x2, int y2, int color){
+  _canvas_gfx->drawTriangle  ( x0, y0, x1, y1, x2, y2, color); // ３点間の三角形の外周
+}
+// fillTriangle  ( x0, y0, x1, y1, x2, y2, color); // ３点間の三角形の塗り
+void lcdGfxFillTriangle  (int x0, int y0, int x1, int y1, int x2, int y2, int color){
+  _canvas_gfx->fillTriangle  ( x0, y0, x1, y1, x2, y2, color); // ３点間の三角形の塗り
+}
+// drawBezier    ( x0, y0, x1, y1, x2, y2, color); // ３点間のベジエ曲線
+void lcdGfxDrawBezier    (int x0, int y0, int x1, int y1, int x2, int y2, int color){
+  _canvas_gfx->drawBezier    ( x0, y0, x1, y1, x2, y2, color); // ３点間のベジエ曲線
+}
+// drawBezier    ( x0, y0, x1, y1, x2, y2, x3, y3, color); // ４点間のベジエ曲線
+void lcdGfxDrawBezier4    (int x0, int y0, int x1, int y1, int x2, int y2, int x3, int y3, int color){
+  _canvas_gfx->drawBezier    ( x0, y0, x1, y1, x2, y2, x3, y3, color); // ４点間のベジエ曲線
+}
+// drawArc       ( x, y, r0, r1, angle0, angle1, color);   // 円弧の外周
+void lcdGfxDrawArc       (int x, int y, int r0, int r1, int angle0, int angle1, int color){
+  _canvas_gfx->drawArc       ( x, y, r0, r1, angle0, angle1, color);   // 円弧の外周
+}
+// fillArc       ( x, y, r0, r1, angle0, angle1, color);   // 円弧の塗り
+void lcdGfxFillArc       (int x, int y, int r0, int r1, int angle0, int angle1, int color){
+  _canvas_gfx->fillArc       ( x, y, r0, r1, angle0, angle1, color);   // 円弧の塗り
+}
+
+void gfxSetPaletteColor(int no, int r, int g, int b){
+  _canvas_gfx->setPaletteColor(no, _display->color888(r, g, b));
+}
+
+void gfxVisible(int mode){
+  if(mode == 0){
+    _canvas_gfx_visible = false;
+  }else{
+    _canvas_gfx_visible = true;
+  }
+}
+
+void lcdUpdate(void){
+  // _display->fillScreen(TFT_BLACK); // clear
+  if(_canvas_gfx_visible){
+    _canvas_gfx->pushSprite(4,4);
+    _canvas_text->pushSprite(4,4,0);
+  }else{
   _canvas_text->pushSprite(4,4);
+  }
+}
+
+void lcdBackspace(void){
+  // note Forth repl treats BS as 'one char back', without rubout
+  int x, y;
+  x = _canvas_text->getCursorX();
+  y = _canvas_text->getCursorY();
+  x -= CN16_width;
+  if(x<0){
+    x = CANVAS_TEXT_X - CN16_width;
+    y -= CN16_height;  
+    if(y<0){
+      x = 0;
+      y = 0;
+    }
+  }
+  _canvas_text->setCursor(x,y);
 }
 
 int lcdPrint(uint8_t *s, int size){
@@ -78,8 +215,12 @@ int lcdPrint(uint8_t *s, int size){
   for(int t = 0; t<size; t++){
     str[0] = *s++;
     str[1] = 0;
-    _canvas_text->print((const char *)str);
-    _canvas_text->pushSprite(4,4);
+    if(str[0] == 0x08){
+      lcdBackspace();
+    }else{
+      _canvas_text->print((const char *)str);
+    }
+    lcdUpdate();
   }
   return size;
 }
@@ -706,10 +847,11 @@ static cell_t ResizeFile(cell_t fd, cell_t size);
   REQUIRED_ESP_SUPPORT \
   REQUIRED_MEMORY_SUPPORT \
   REQUIRED_SERIAL_SUPPORT \
+  OPTIONAL_M5KEYBOARD_SUPPORT \
+  OPTIONAL_M5DISPLAY_SUPPORT \
   OPTIONAL_SERIAL2_SUPPORT \
   REQUIRED_ARDUINO_GPIO_SUPPORT \
   OPTIONAL_FAST_LED \
-  OPTIONAL_LCD \
   REQUIRED_SYSTEM_SUPPORT \
   REQUIRED_FILES_SUPPORT \
   OPTIONAL_LEDC_SUPPORT \
@@ -779,17 +921,51 @@ static cell_t ResizeFile(cell_t fd, cell_t size);
 #define REQUIRED_SERIAL_SUPPORT \
   XV(serial, "Serial.begin", SERIAL_BEGIN, USBSerial.begin(tos); DROP) \
   XV(serial, "Serial.end", SERIAL_END, USBSerial.end()) \
-  XV(serial, "Serial.available", SERIAL_AVAILABLE, PUSH kbdAvailable()) \
-  XV(serial, "Serial.readBytes", SERIAL_READ_BYTES, n0 = kbdGet((char *)b1,n0); NIP) \
-  XV(serial, "Serial.write", SERIAL_WRITE, n0 = lcdPrint(b1, n0); NIP) \
-  XV(serial, "Serial.lcdWrite", SERIAL_LCDWRITE, n0 = lcdPrint(b1, n0); NIP) \
+  XV(serial, "Serial.available", SERIAL_AVAILABLE, PUSH USBSerial.available()) \
+  XV(serial, "Serial.readBytes", SERIAL_READ_BYTES, n0 = USBSerial.readBytes(b1, n0); NIP) \
+  XV(serial, "Serial.write", SERIAL_WRITE, n0 = USBSerial.write(b1, n0); NIP) \
   XV(serial, "Serial.flush", SERIAL_FLUSH, USBSerial.flush()) \
   XV(serial, "Serial.setDebugOutput", SERIAL_DEBUG_OUTPUT, USBSerial.setDebugOutput(n0); DROP) 
 
   // XV(serial, "Serial.available", SERIAL_AVAILABLE, PUSH USBSerial.available()) \
-  // XV(serial, "Serial.readBytes", SERIAL_READ_BYTES, n0 = USBSerial.readBytes(b1, n0); NIP) \ 
+  // XV(serial, "Serial.readBytes", SERIAL_READ_BYTES, n0 = USBSerial.readBytes(b1, n0); NIP) \
   // XV(serial, "Serial.available", SERIAL_AVAILABLE, PUSH kbdAvailable()) \
   // XV(serial, "Serial.readBytes", SERIAL_READ_BYTES, n0 = kbdGet((char *)b1,n0); NIP) \
+  // XV(serial, "Serial.write", SERIAL_WRITE, n0 = lcdPrint(b1, n0); NIP) \
+
+#define OPTIONAL_M5KEYBOARD_SUPPORT \
+  XV(serial, "M5Keyboard.available", M5KEYBOARD_AVAILABLE, PUSH kbdAvailable()) \
+  XV(serial, "M5Keyboard.readBytes", M5KEYBOARD_READ_BYTES, n0 = kbdGet((char *)b1,n0); NIP)
+
+#define OPTIONAL_M5DISPLAY_SUPPORT \
+  XV(serial, "M5Display.write", M5DISPLAY_WRITE, n0 = lcdPrint(b1, n0); NIP) \
+  Y(m5SetCursor, lcdSetcursor(n1, n0); DROPn(2))\
+  Y(m5Home, lcdHome())\
+  Y(lcdUpdate, lcdUpdate())\
+  Y(m5gfxSetPaletteColor, gfxSetPaletteColor(n3, n2, n1, n0); DROPn(4))\
+  Y(m5gfxFillScreen, lcdGfxFillScreen(n0); DROP)\
+  Y(m5gfxPset, lcdGfxPset(n2, n1, n0); DROPn(3))\
+  Y(m5gfxDrawFastVLine, lcdGfxDrawFastVLine(n3, n2, n1, n0); DROPn(4))\
+  Y(m5gfxDrawFastHLine, lcdGfxDrawFastHLine(n3, n2, n1, n0); DROPn(4))\
+  Y(m5gfxDrawRect, lcdGfxDrawRect(n4, n3, n2, n1, n0); DROPn(5))\
+  Y(m5gfxFillRect, lcdGfxFillRect(n4, n3, n2, n1, n0); DROPn(5))\
+  Y(m5gfxDrawRoundRect, lcdGfxDrawRoundRect(n5, n4, n3, n2, n1, n0); DROPn(6))\
+  Y(m5gfxFillRoundRect, lcdGfxFillRoundRect(n5, n4, n3, n2, n1, n0); DROPn(6))\
+  Y(m5gfxDrawCircle, lcdGfxDrawCircle(n3, n2, n1, n0); DROPn(4))\
+  Y(m5gfxFillCircle, lcdGfxFillCircle(n3, n2, n1, n0); DROPn(4))\
+  Y(m5gfxDrawEllipse, lcdGfxDrawEllipse(n4, n3, n2, n1, n0); DROPn(5))\
+  Y(m5gfxFillEllipse, lcdGfxFillEllipse(n4, n3, n2, n1, n0); DROPn(5))\
+  Y(m5gfxDrawLine, lcdGfxDrawLine(n4, n3, n2, n1, n0); DROPn(5))\
+  Y(m5gfxDrawTriangle, lcdGfxDrawTriangle(n6, n5, n4, n3, n2, n1, n0); DROPn(7))\
+  Y(m5gfxFillTriangle, lcdGfxFillTriangle(n6, n5, n4, n3, n2, n1, n0); DROPn(7))\
+  Y(m5gfxDrawBezier, lcdGfxDrawBezier(n6, n5, n4, n3, n2, n1, n0); DROPn(7))\
+  Y(m5gfxDrawBezier4, lcdGfxDrawBezier4(n8, n7, n6, n5, n4, n3, n2, n1, n0); DROPn(9))\
+  Y(m5gfxDrawArc, lcdGfxDrawArc(n6, n5, n4, n3, n2, n1, n0); DROPn(7))\
+  Y(m5gfxFillArc, lcdGfxFillArc(n6, n5, n4, n3, n2, n1, n0); DROPn(7))\
+  Y(delay, delay(n0); DROP) \
+  Y(m5gfxVisible, gfxVisible(n0); DROP)\
+  // Y(lcdInit, lcdInit()) \
+  // Y(lcdPrint, lcdPrint(n0); DROP) \
 
 #ifndef ENABLE_SERIAL2_SUPPORT
 # define OPTIONAL_SERIAL2_SUPPORT
@@ -814,10 +990,6 @@ static cell_t ResizeFile(cell_t fd, cell_t size);
 #define OPTIONAL_FAST_LED \
   Y(addLeds, addLeds()) \
   Y(showLeds, leds[0] = CRGB(n2, n1, n0); FastLED.show(); DROPn(3))
-
-#define OPTIONAL_LCD \
-  Y(lcdInit, lcdInit()) \
-  Y(lcdPrint, lcdPrint(n0); DROP) 
 
 #define REQUIRED_FILES_SUPPORT \
   X("R/O", R_O, PUSH O_RDONLY) \
@@ -2741,10 +2913,52 @@ internals definitions also serial
 : serial-key ( -- n )
    begin pause Serial.available until 0 >r rp@ 1 Serial.readBytes drop r> ;
 : serial-key? ( -- n ) Serial.available ;
+
+( Set up M5Cardputer I/O )
+: m5-type ( a n -- ) M5Display.write drop ;
+: m5-key ( -- n )
+   begin pause M5Keyboard.available until 0 >r rp@ 1 M5Keyboard.readBytes drop r> ;
+: m5-key? ( -- n ) M5Keyboard.available ;
+variable m5write 1 m5write !
+variable m5read 1 m5read !
 also forth definitions
-: default-type serial-type ;
-: default-key serial-key ;
-: default-key? serial-key? ;
+: default-type ( a n -- ) m5write @ 0 = if serial-type else m5-type then ;
+: default-key ( -- n ) m5read @ 0 = if serial-key else m5-key then ;
+: default-key? ( -- n ) m5read @ 0 = if serial-key? else m5-key? then ;
+: m5type-on ( -- ) 1 m5write ! ;
+: m5type-off ( -- ) 0 m5write ! ;
+: m5key-on ( -- ) 1 m5read ! ;
+: m5key-off ( -- ) 0 m5read ! ;
+: m5gfx-on ( -- ) 1 m5gfxVisible ;
+: m5gfx-off ( -- ) 0 m5gfxVisible ;
+: home ( -- ) m5Home ;
+: locate ( n n -- ) m5SetCursor ;
+: gcls ( -- ) 0 m5gfxFillScreen ;
+: palette ( n n n n -- ) m5gfxSetPaletteColor ;
+: fillscreen ( n -- ) m5gfxFillScreen ;
+: screenUpdate ( -- ) lcdUpdate ;
+: pset ( n n n -- ) m5gfxPset ;
+: vline ( n n n n -- ) m5gfxDrawFastVLine ;
+: hline ( n n n n -- ) m5gfxDrawFastHLine ;
+: rect ( n n n n n -- ) m5gfxDrawRect ;
+: frect ( n n n n n -- ) m5gfxFillRect ;
+: rrect ( n n n n n n -- ) m5gfxDrawRoundRect ;
+: frrect ( n n n n n n -- ) m5gfxFillRoundRect ;
+: circle ( n n n n -- ) m5gfxDrawCircle ;
+: fcircle ( n n n n -- ) m5gfxFillCircle ;
+: ellipsis ( n n n n n -- ) m5gfxDrawEllipse ;
+: fellipsis ( n n n n n -- ) m5gfxFillEllipse ;
+: line ( n n n n n -- ) m5gfxDrawLine ;
+: triangle ( n n n n n n n -- ) m5gfxDrawTriangle ;
+: ftriangle ( n n n n n n n -- ) m5gfxFillTriangle ;
+: bezier ( n n n n n n n -- ) m5gfxDrawBezier ;
+: bezier4 ( n n n n n n n n n -- ) m5gfxDrawBezier4 ;
+: arc ( n n n n n n n -- ) m5gfxDrawArc ;
+: farc ( n n n n n n n -- ) m5gfxFillArc ;
+( initial settings )
+m5key-off
+m5gfx-off
+
 ' default-type is type
 ' default-key is key
 ' default-key? is key?
@@ -3230,7 +3444,9 @@ static cell_t ResizeFile(cell_t fd, cell_t size) {
 void setup() {
   // for M5Cardputer
   lcdInit();  // do disp->init() and createSprite() as eaarly as possible
+  lcdGfxInit();
   kbdInit(); 
+  addLeds(); // init the RGB LED
   // end "for M5Cardputer"
   cell_t fh = heap_caps_get_free_size(MALLOC_CAP_INTERNAL);
   cell_t hc = heap_caps_get_largest_free_block(MALLOC_CAP_INTERNAL);
