@@ -32,10 +32,11 @@ void addLeds(void){
 
 LGFX_Device* _display;
 LGFX_Sprite* _canvas_text;
+LGFX_Sprite* _canvas_char;
 LGFX_Sprite* _canvas_gfx;
 
 void lcdInit(void){
-  // Cardputer Display has 240*135 screen
+  // Cardputer Display resolution -  240 x 135 
   // set the display area (canvas) to 232 x 128, origin at (4, 4)
   _display = new LGFX_Cardputer;
   _display->init();
@@ -50,7 +51,7 @@ void lcdInit(void){
   if(_canvas_text->createSprite(CANVAS_TEXT_X, CANVAS_TEXT_Y) == nullptr){
       USBSerial.write("INIT TEXT SPRITE FAILED!\n");
       while(true){;}
-  };
+  }
   // _canvas_text->setPaletteColor(15, 0xffffff);
   _canvas_text->setPaletteColor(12, TFT_ORANGE);
   _canvas_text->setPaletteColor(14, 0x00ff00U);
@@ -66,15 +67,25 @@ void lcdInit(void){
   _canvas_text->printf("M5Cardputer Forth\n");
   _canvas_text->setTextColor(14,0);
   _canvas_text->pushSprite(4,4,0);
+
+  _canvas_char = new LGFX_Sprite(_display);
+  _canvas_char->setColorDepth(4); // 16color palette
+  if(_canvas_char->createSprite(CN16_width, CN16_height) == nullptr){
+      USBSerial.write("INIT CHAR SPRITE FAILED!\n");
+      while(true){;}
+  }
+  _canvas_char->setPaletteColor(14, 0x00ff00U);
+  _canvas_char->setTextScroll(false);
+  _canvas_char->setBaseColor(0);
+  _canvas_char->fillScreen(0);
+  _canvas_char->setFont(FONT_REPL); // efontCN_16 (8x16px font)
+  _canvas_char->setTextSize(1);
+  _canvas_char->setCursor(0, 0);
+  _canvas_char->setTextColor(14,0);
 }
 
 void lcdSetcursor(int x, int y){
   _canvas_text->setCursor(x * CN16_width, y * CN16_height);
-}
-
-void lcdHome(void){
-  _canvas_text->fillScreen(TFT_BLACK);
-  _canvas_text->setCursor(0, 0);
 }
 
 bool _canvas_gfx_visible = false;
@@ -193,6 +204,12 @@ void lcdUpdate(void){
   }
 }
 
+void lcdHome(void){
+  _canvas_text->fillScreen(TFT_BLACK);
+  _canvas_text->setCursor(0, 0);
+  lcdUpdate();
+}
+
 void lcdBackspace(void){
   // note Forth repl treats BS as 'one char back', without rubout
   int x, y;
@@ -212,15 +229,32 @@ void lcdBackspace(void){
 
 int lcdPrint(uint8_t *s, int size){
   uint8_t str[16];
+  int x, y;
   for(int t = 0; t<size; t++){
     str[0] = *s++;
     str[1] = 0;
+    x = _canvas_text->getCursorX();
+    y = _canvas_text->getCursorY();
+    if( x > CANVAS_TEXT_X - CN16_width){
+      x = 0;
+      y += CN16_height;
+    }
+    if( y > CANVAS_TEXT_Y - CN16_height){
+      y -= CN16_height;
+    }
     if(str[0] == 0x08){
       lcdBackspace();
+      lcdUpdate();
+    }else if((y < CANVAS_TEXT_Y - CN16_height * 2) or (x > CN16_width)){
+      _canvas_char->fillScreen(0);
+      _canvas_char->setCursor(0, 0);
+      _canvas_char->print((const char *)str);
+      _canvas_char->pushSprite(x+4, y+4, 0);
+      _canvas_text->print((const char *)str);
     }else{
       _canvas_text->print((const char *)str);
+      lcdUpdate();
     }
-    lcdUpdate();
   }
   return size;
 }

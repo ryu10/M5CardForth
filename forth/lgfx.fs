@@ -21,4 +21,4 @@
 : bullseye 7 0 do 134 64 60 i 8 * - i 8 + fcircle loop screenUpdate ;
 : moire 50 0 do 231 0 131 i 2 * 80 line screenUpdate loop  51 0 do 231 0 131 i 2 * + 100 80 line screenUpdate loop ;
 
-m5gfx-on go bullseye 500 delay mbox moire 5000 delay
+m5gfx-on go bullseye 500 delay mbox 500 delay moire 3000 delay

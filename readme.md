@@ -35,6 +35,14 @@ Supported keys:
 
 The ctrl/opt/alt/fn/esc keys do not work.
 
+## Sample programs
+
+[forth/fastLed.fs](forth/fastLed.fs) 
+
+[forth/lgfx.fs](forth/lgfx.fs)
+
+[forth/M5StampS3-gpio.fs](forth/M5StampS3-gpio.fs) 
+
 ## Add'l Internal words
 
 Newly defined words to access Cardputer features. Currently under development, the specs will be changed in the future.
