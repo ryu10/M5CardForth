@@ -14,14 +14,12 @@ m5-type ( a n -- )
 showLeds ( n n n -- )
 
 ( Display : LovyanGFX )
-: m5gfx-on ( -- ) 1 m5gfxVisible ;
-: m5gfx-off ( -- ) 0 m5gfxVisible ;
 : home ( -- ) m5Home ;
 : locate ( n n -- ) m5SetCursor ;
-: gcls ( -- ) 0 m5gfxFillScreen ;
 : palette ( n n n n -- ) m5gfxSetPaletteColor ;
 : fillscreen ( n -- ) m5gfxFillScreen ;
 : screenUpdate ( -- ) lcdUpdate ;
+: gcls ( -- ) 0 m5gfxFillScreen screenUpdate ;
 : pset ( n n n -- ) m5gfxPset ;
 : vline ( n n n n -- ) m5gfxDrawFastVLine ;
 : hline ( n n n n -- ) m5gfxDrawFastHLine ;
