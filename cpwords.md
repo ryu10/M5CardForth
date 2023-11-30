@@ -12,11 +12,6 @@ m5-type ( a n -- )
 
 ( RGB Led : FastLED library )
 showLeds ( n n n -- )
-offLED ( -- )
-redLED ( -- )
-greenLED ( -- )
-blueLED ( -- )
-whiteLED ( -- )
 
 ( Display : LovyanGFX )
 : m5gfx-on ( -- ) 1 m5gfxVisible ;
