@@ -32,7 +32,7 @@ M5Cardputer を使って ESP32forth コンソールを作っています。
 * `Shift` キー ('`Aa`')
 * `Enter` キーと `BS` キー
 
-ctrl/opt/alt/fn/esc キーは機能しません。
+`ctrl`/`opt`/`alt`/`fn`/`esc` キーは機能しません。
 
 ## サンプルコード
 
