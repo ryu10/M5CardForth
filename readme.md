@@ -8,7 +8,7 @@
 
 A simple console for M5Cardputer + ESP32forth.
 
-Everything is in alpha state, WIP.
+The current release is alpha.
 
 The following components are roughly combined:
 

@@ -11,7 +11,7 @@ m5-key? ( -- n )
 m5-type ( a n -- ) 
 
 ( RGB Led : FastLED library )
-showLeds ( n n n -- )
+showLeds ( n n n -- ) ( r g b led )
 
 ( Display : LovyanGFX )
 : home ( -- ) m5Home ;
@@ -40,5 +40,5 @@ showLeds ( n n n -- )
 : farc ( n n n n n n n -- ) m5gfxFillArc ;
 
 ( Arduino enhancement )
-delay ( n -- )
+delay ( n -- ) ( ms delay )
 ``` 

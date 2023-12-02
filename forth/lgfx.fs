@@ -21,4 +21,9 @@
 : bullseye 7 0 do 134 64 60 i 8 * - i 8 + fcircle loop screenUpdate ;
 : moire 50 0 do 231 0 131 i 2 * 80 line screenUpdate loop  51 0 do 231 0 131 i 2 * + 100 80 line screenUpdate loop ;
 
-m5gfx-on go bullseye 500 delay mbox 500 delay moire 3000 delay
+: go2 m5gfx-on gcls go bullseye 500 delay mbox 500 delay moire 500 delay 3 0 do ." Hello " i . cr loop ;
+
+go2
+
+." 日本語と簡体字の共通部分だけ表示されるの？ ひらがなは？ カタカナは？ 繁体字は？" cr 
+
