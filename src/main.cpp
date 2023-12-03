@@ -307,6 +307,31 @@ int kbdAvailable(void){
   return -1;
 }
 
+/* ESP32-S3 GPIO Reg op. */
+void setGpio(uint32_t reg){
+  GPIO.out_w1ts = reg;
+}
+
+void setGpio1(uint32_t reg){
+  GPIO.out1_w1ts.val = reg;
+}
+
+void resetGpio(uint32_t reg){
+  GPIO.out_w1tc = reg;
+}
+
+void resetGpio1(uint32_t reg){
+  GPIO.out1_w1tc.val = reg;
+}
+
+uint32_t getGpio(void){
+  return GPIO.in;
+}
+
+uint32_t getGpio1(void){
+  return GPIO.in1.val;
+}
+
 /*
  * ESP32forth v7.0.7.15
  * Revision: 564a8fc68b545ebeb3ab
@@ -883,6 +908,7 @@ static cell_t ResizeFile(cell_t fd, cell_t size);
   REQUIRED_SERIAL_SUPPORT \
   OPTIONAL_M5KEYBOARD_SUPPORT \
   OPTIONAL_M5DISPLAY_SUPPORT \
+  OPTIONAL_M5GPIO_SUPPORT \
   OPTIONAL_SERIAL2_SUPPORT \
   REQUIRED_ARDUINO_GPIO_SUPPORT \
   OPTIONAL_FAST_LED \
@@ -1001,6 +1027,11 @@ static cell_t ResizeFile(cell_t fd, cell_t size);
   // Y(lcdInit, lcdInit()) \
   // Y(lcdPrint, lcdPrint(n0); DROP) \
 
+#define OPTIONAL_M5GPIO_SUPPORT \
+  XV(serial, "M5Gpio.setGpio", M5GPIO_SETGPIO, setGpio(n0); DROP)\
+  XV(serial, "M5Gpio.resetGpio", M5GPIO_RESETGPIO, resetGpio(n0); DROP)\
+  XV(serial, "M5Gpio.getGpio", M5GPIO_GETGPIO, n0 = getGpio())\
+  
 #ifndef ENABLE_SERIAL2_SUPPORT
 # define OPTIONAL_SERIAL2_SUPPORT
 #else
@@ -2992,6 +3023,9 @@ also forth definitions
 ( initial settings )
 m5key-off
 m5gfx-off
+: setgpio ( n -- ) M5Gpio.setGpio ; 
+: resetgpio ( n -- ) M5Gpio.resetGpio ; 
+: getgpio ( n -- ) M5Gpio.getGpio ; 
 
 ' default-type is type
 ' default-key is key
