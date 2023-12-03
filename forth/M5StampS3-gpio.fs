@@ -20,4 +20,5 @@ G2 OUTPUT pinMode
 ( GPIO_OUT_W1TS_REG = 0x0008 ; bit set, GPIO0 = 1 )
 ( GPIO_OUT_W1TC_REG = 0x000C ; bit clear, GPIO0 = 1 )
 ( GPIO_OUT_DATA_ORIG = 0x0004 ; to read the value )
-: go2 hex 0 0 do 2 60004008 L! 2 6000400C L! 0 +loop ;
+hex
+: go2 0 0 do 2 60004008 L! 2 6000400C L! 0 +loop ;
