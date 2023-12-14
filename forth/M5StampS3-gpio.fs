@@ -22,3 +22,4 @@ G2 OUTPUT pinMode
 ( GPIO_OUT_DATA_ORIG = 0x0004 ; to read the value )
 hex
 : go2 0 0 do 2 60004008 L! 2 6000400C L! 0 +loop ;
+decimal 

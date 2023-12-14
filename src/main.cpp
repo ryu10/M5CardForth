@@ -332,6 +332,18 @@ uint32_t getGpio1(void){
   return GPIO.in1.val;
 }
 
+// M5Cardputer SD
+#include <SPI.h>
+#include <SD.h>
+
+SPIClass SPI2;
+
+bool mySDbegin(void){
+  SPI2.begin(40, 39, 14, 12);
+  SPI2.setDataMode(SPI_MODE0);
+  return SD.begin(12, SPI2);
+}
+
 /*
  * ESP32forth v7.0.7.15
  * Revision: 564a8fc68b545ebeb3ab
@@ -1189,7 +1201,7 @@ static cell_t ResizeFile(cell_t fd, cell_t size);
 #  include "SD.h"
 # endif
 # define OPTIONAL_SD_SUPPORT \
-  XV(SD, "SD.begin", SD_BEGIN, PUSH SD.begin()) \
+  XV(SD, "SD.begin", SD_BEGIN, PUSH mySDbegin()) \
   XV(SD, "SD.beginFull", SD_BEGIN_FULL, \
       tos = SD.begin(n5, *(SPIClass*)a4, n3, c2, n1, n0); NIPn(5)) \
   XV(SD, "SD.beginDefaults", SD_BEGIN_DEFAULTS, \
@@ -1199,6 +1211,8 @@ static cell_t ResizeFile(cell_t fd, cell_t size);
   XV(SD, "SD.totalBytes", SD_TOTAL_BYTES, PUSH SD.totalBytes()) \
   XV(SD, "SD.usedBytes", SD_USED_BYTES, PUSH SD.usedBytes())
 #endif
+
+  // XV(SD, "SD.begin", SD_BEGIN, PUSH SD.begin()) \
 
 #ifndef ENABLE_SD_MMC_SUPPORT
 # define OPTIONAL_SD_MMC_SUPPORT
