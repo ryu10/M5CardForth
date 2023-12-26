@@ -51,7 +51,7 @@ Newly defined words to access Cardputer features. Currently under development, t
 
 ## Todo
 
-* switch console/serial ✅
+* switch between Cardputer console and serial ✅
 * rgb led ✅
 * backspace ✅
 * graphics ✅
