@@ -55,7 +55,7 @@ Newly defined words to access Cardputer features. Currently under development, t
 * rgb led ✅
 * backspace ✅
 * graphics ✅
-* sd card
+* sd card ✅
 * sound 
 * mic
 * (ir)
