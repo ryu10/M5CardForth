@@ -1,7 +1,7 @@
 # Additional words for M5Cardputer
 
 ```
-( Cardupter console )
+( Cardputer console )
 m5type-on ( -- ) ( use Cardputer display )
 m5type-off ( -- ) ( use Serial output )
 m5key-on ( -- ) ( use Cardputer keyboard )
