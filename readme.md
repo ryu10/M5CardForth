@@ -33,7 +33,7 @@ Supported keys:
 * `Shift`
 * `Enter` and `BS`
 
-The ctrl/opt/alt/fn/esc keys do not work.
+The `ctrl`/`opt`/`alt`/`fn`/`esc` keys do not work.
 
 ## Sample programs
 
@@ -43,7 +43,7 @@ The ctrl/opt/alt/fn/esc keys do not work.
 
 [forth/M5StampS3-gpio.fs](forth/M5StampS3-gpio.fs) 
 
-## Add'l Internal words
+## Additional Internal words
 
 Newly defined words to access Cardputer features. Currently under development, the specs will be changed in the future.
 
@@ -61,6 +61,5 @@ Newly defined words to access Cardputer features. Currently under development, t
 * (ir)
 * (clock)
 * (wifi)
-
 
 Have fun.
