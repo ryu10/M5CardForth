@@ -49,6 +49,28 @@ Newly defined words to access Cardputer features. Currently under development, t
 
 -> ([See this page](cpwords.md))
 
+## SD Card support
+
+Use the ESP32Forth ```SD``` vocabulary.
+
+![SDUsage](media/sdusage.png)
+
+### Example: block editor 
+
+```
+sd
+sd.begin
+use /sd/myblk
+s" /sd/myblk" open-blocks
+editor
+0 a : hi ." Howdy!" ;
+update
+save-buffers
+0 load hi
+```
+
+Note ```visual editor``` does not work with SD.
+
 ## Todo
 
 * switch between Cardputer console and serial ✅

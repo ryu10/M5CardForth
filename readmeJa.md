@@ -50,6 +50,28 @@ Serial Monitor コンソールにコピペして使います。入力バッフ�
 
 -> ([See this page](cpwords.md))
 
+## SD カードサポート
+
+ESP32Forth の ```SD``` ボキャブラリを使用します。
+
+![SDUsage](media/sdusage.png)
+
+### ブロックエディタ使用例
+
+```
+sd
+sd.begin
+use /sd/myblk
+s" /sd/myblk" open-blocks
+editor
+0 a : hi ." Howdy!" ;
+update
+save-buffers
+0 load hi
+```
+
+```visual editor /sd``` は動きません。 
+
 ## Todo
 
 * switch between Cardputer console and serial ✅
