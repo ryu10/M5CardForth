@@ -72,6 +72,15 @@ save-buffers
 
 ```visual editor /sd``` は動きません。 
 
+### /spiffs/autoexec.fs の使用
+
+本リポジトリ `src/autoexec.fs` を SD カード経由で `/spiffs/autoexec.fs`にコピーすると ESP32Forth 起動時に自動実行されます。`src/autoexec.fs` には上記サンプルコードの内容が `m5demo` ボキャブラリとして記述されています。
+
+```
+m5demo
+go2
+```
+
 ## Todo
 
 * switch between Cardputer console and serial ✅
