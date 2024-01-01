@@ -3034,9 +3034,7 @@ also forth definitions
 : bezier4 ( n n n n n n n n n -- ) m5gfxDrawBezier4 ;
 : arc ( n n n n n n n -- ) m5gfxDrawArc ;
 : farc ( n n n n n n n -- ) m5gfxFillArc ;
-( initial settings )
-m5key-off
-m5gfx-off
+( gpio )
 : setgpio ( n -- ) M5Gpio.setGpio ; 
 : resetgpio ( n -- ) M5Gpio.resetGpio ; 
 : getgpio ( n -- ) M5Gpio.getGpio ; 
@@ -3068,8 +3066,23 @@ also ledc also serial also SPIFFS
 115200 Serial.begin
 100 ms
 -1 z" /spiffs" 10 SPIFFS.begin drop
+
+( set M5Cardputer GPIO )
+0 constant GPIO0 ( Cardputer Button B0 )
+1 constant GPIO1 ( Grove PortA G1 )
+2 constant GPIO2 ( Grove PortA G2 )
+GPIO0 INPUT pinMode
+GPIO1 OUTPUT pinMode
+GPIO2 OUTPUT pinMode
+: m5button? ( -- n ) GPIO0 digitalRead 0 = if 1 else 0 then ; 
+( setup M5Cardputer console )
+: m5autoexec s" /spiffs/autoexec.fs" 2dup file-exists? if included else 2drop then ;
+: m5keyboardchk m5button? 0= if m5key-off else m5key-on m5autoexec then ;
+m5keyboardchk
+m5gfx-off
 led OUTPUT pinMode
 high led pin
+
 
 internals definitions also ESP
 : esp32-stats
