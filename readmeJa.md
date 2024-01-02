@@ -24,6 +24,20 @@ M5Cardputer を使って ESP32forth コンソールを作っています。
 
 `m5key-on` と入力すると M5Cardputer キーボードに切り替わります。
 
+`m5key-on m5key-off m5type-on m5type-off` の各ワードで、コンソールの入出力を切り替えられます。
+
+### M5Cardputer を単体で使用する
+
+USB ケーブルを接続せず M5Cardputer 単体で使用するには以下の手順で起動します。
+
+1. 以下のいずれかの操作を行います。
+    1. M5Cardupter の電源を入れる
+    2. リセットボタン（本体左上）を押して放す
+2. 直後に M5Cardputer の `BtnG0` ボタン（本体右上）を押します。
+3. 画面に `ok` プロンプトが表示されたら `BtnG0` ボタンを放します。
+
+この方法で起動すると M5Cardputer のキーボードとコンソール出力が使用可能になります。
+
 ## Cardputer キーボード
 
 以下のキーが使えます。
@@ -74,7 +88,7 @@ save-buffers
 
 ### /spiffs/autoexec.fs の使用
 
-本リポジトリ `src/autoexec.fs` を SD カード経由で `/spiffs/autoexec.fs`にコピーすると ESP32Forth 起動時に自動実行されます。`src/autoexec.fs` には上記サンプルコードの内容が `m5demo` ボキャブラリとして記述されています。
+[forth/autoexec.fs](forth/autoexec.fs) を SD カード経由で `/spiffs/autoexec.fs`にコピーするとファイルの内容が ESP32Forth 起動時に自動実行されます。`src/autoexec.fs` にはサンプルコードの内容が `m5demo` ボキャブラリとして記述されています。下記をコンソールに入力するとデモプログラムが実行されます。
 
 ```
 m5demo

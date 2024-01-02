@@ -25,6 +25,19 @@ At startup, the console reads from the USBSerial input. Open `PlatformIO : Seria
 
 The following words can be used to switch the console I/O : `m5key-on m5key-off m5type-on m5type-off`
 
+### Using M5Cardputer standalone
+
+To use the M5CardForth standalone, without serial, follow the steps:
+
+1. Do either:
+ * Turn M5Cardputer power switch on, or, 
+ * press and relase the button `BtnRst`.
+2. Immediately after you complete the Step 1, press the button `BtnG0` (at the top-right of M5Cardputer). 
+3. After the prompt `ok` is displayed on the screen, you may release `BtnG0`.
+
+Both the M5Cardputer keyboard and console will be enabled.
+
+
 ## Cardputer keyboard
 
 Supported keys:
@@ -45,7 +58,7 @@ The `ctrl`/`opt`/`alt`/`fn`/`esc` keys do not work.
 
 ## Additional Internal words
 
-Newly defined words to access Cardputer features. Currently under development, the specs will be changed in the future.
+In addition to the ESP32Forth standard words, several new words are defined to access the M5cardputer features. Currently under development, the specs will be changed in the future.
 
 -> ([See this page](cpwords.md))
 
@@ -70,6 +83,15 @@ save-buffers
 ```
 
 Note ```visual editor``` does not work with SD.
+
+### Using `/spiffs/autoexec.fs`
+
+You may copy [forth/autoexec.fs](forth/autoexec.fs) to `/spiffs/autoexec.fs` (via an SD card), then the contents of the file will be automatically executed at startup. Type the following to run a demo.
+
+```
+m5demo
+go2
+```
 
 ## Todo
 
