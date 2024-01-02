@@ -31,12 +31,11 @@ To use the M5CardForth standalone, without serial, follow the steps:
 
 1. Do either:
  * Turn M5Cardputer power switch on, or, 
- * press and relase the button `BtnRst`.
-2. Immediately after you complete the Step 1, press the button `BtnG0` (at the top-right of M5Cardputer). 
-3. After the prompt `ok` is displayed on the screen, you may release `BtnG0`.
+ * press and relase the button `BtnRst` (at the top-left of M5Cardputer).
+2. Immediately after you complete Step 1, press `BtnG0` (top-right). 
+3. After prompt `ok` is displayed, you may release `BtnG0`.
 
-Both the M5Cardputer keyboard and console will be enabled.
-
+Both the M5Cardputer keyboard and console output will be enabled.
 
 ## Cardputer keyboard
 
@@ -56,15 +55,15 @@ The `ctrl`/`opt`/`alt`/`fn`/`esc` keys do not work.
 
 [forth/M5StampS3-gpio.fs](forth/M5StampS3-gpio.fs) 
 
-## Additional Internal words
+## Additional words
 
-In addition to the ESP32Forth standard words, several new words are defined to access the M5cardputer features. Currently under development, the specs will be changed in the future.
+In addition to ESP32Forth standard words, several new words are defined to access the M5cardputer features. Currently under development, the specs will be changed in the future.
 
 -> ([See this page](cpwords.md))
 
 ## SD Card support
 
-Use the ESP32Forth ```SD``` vocabulary.
+Use the ESP32Forth `SD` vocabulary.
 
 ![SDUsage](media/sdusage.png)
 

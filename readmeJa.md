@@ -107,5 +107,3 @@ go2
 * (ir)
 * (clock)
 * (wifi)
-
-Have fun.
