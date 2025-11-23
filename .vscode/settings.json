@@ -1,3 +1,5 @@
 {
-    "idf.pythonInstallPath": "/usr/bin/python3"
+    "idf.pythonInstallPath": "/opt/homebrew/bin/python3",
+    "idf.espIdfPath": "/Users/ryu/esp/v5.4.3/esp-idf",
+    "idf.toolsPath": "/Users/ryu/.espressif"
 }

@@ -261,7 +261,8 @@ int lcdPrint(uint8_t *s, int size){
 
 /* M5Cardputer Keyboard */
 /* #include "M5Cardputer.h" // Incompatible! */
-#include "utility/Keyboard.h"
+// #include "utility/Keyboard.h"
+#include "utility/Keyboard/Keyboard.h"
 
 Keyboard_Class Keyboard = Keyboard_Class();
 String _keyboard_buf = "";
