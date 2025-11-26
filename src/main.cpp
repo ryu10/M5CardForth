@@ -19,11 +19,14 @@
 
 /* FastLED */
 #include <FastLED.h>
+#define PIN_LED_EN 38   // for Cardputer-ADV
 #define PIN_LED    21   // G21
 #define NUM_LEDS   1
 CRGB leds[1];
 
 void addLeds(void){
+  pinMode(PIN_LED_EN, OUTPUT);
+  digitalWrite(PIN_LED_EN, HIGH);
   FastLED.addLeds<WS2812B, PIN_LED, GRB>(leds, NUM_LEDS); 
 }
 
