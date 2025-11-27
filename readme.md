@@ -19,19 +19,21 @@ The following components are roughly combined:
 
 Build / flash the project with [Platformio](https://platformio.org/).
 
+You can also install binaries from M5Burner using the share codes below.
+
 ## Supported Models and Installation
 
 ### Original Cardputer
 
 Release [v0.0.9](https://github.com/ryu10/M5CardForth/releases/tag/v0.0.9) ([main](https://github.com/ryu10/M5CardForth/tree/main))
 
-M5Burner ShareCode: XieOPr3qjkD2rmdY
+M5Burner Share　Code: XieOPr3qjkD2rmdY
 
 ### Cardputer v1.1 / Cardputer-Adv
 
 Release [v0.1.0-s3a](https://github.com/ryu10/M5CardForth/releases/tag/v0.1.0-s3a) ([s3a](https://github.com/ryu10/M5CardForth/tree/s3a))
 
-M5Burner ShareCode: FVom7xcBBXFo4v0z
+M5Burner Share　Code: Ow3k7C9dWPOiZ7Zh
 
 ## Console
 
