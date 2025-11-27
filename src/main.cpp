@@ -262,15 +262,23 @@ int lcdPrint(uint8_t *s, int size){
   return size;
 }
 
-/* M5Cardputer Keyboard */
+/* M5Cardputer-adv Keyboard */
 /* #include "M5Cardputer.h" // Incompatible! */
 // #include "utility/Keyboard.h"
 #include "utility/Keyboard/Keyboard.h"
+#include <Wire.h>
+#define SDA_PIN 8
+#define SCL_PIN 9
+#define KBD_INT_PIN 11
 
 Keyboard_Class Keyboard = Keyboard_Class();
 String _keyboard_buf = "";
 
 void kbdInit(void){
+  Wire.begin(SDA_PIN, SCL_PIN);
+  Wire.setClock(400000);
+  pinMode(KBD_INT_PIN, INPUT_PULLUP);
+  delay(10);
   Keyboard.begin();
 }
 
