@@ -19,6 +19,20 @@ The following components are roughly combined:
 
 Build / flash the project with [Platformio](https://platformio.org/).
 
+## Supported Models and Installation
+
+### Original Cardputer
+
+Release [v0.0.9](https://github.com/ryu10/M5CardForth/releases/tag/v0.0.9) ([main](https://github.com/ryu10/M5CardForth/tree/main))
+
+M5Burner ShareCode: XieOPr3qjkD2rmdY
+
+### Cardputer v1.1 / Cardputer-Adv
+
+Release [v0.1.0s3a](https://github.com/ryu10/M5CardForth/releases/tag/v0.1.0s3a) ([s3a](https://github.com/ryu10/M5CardForth/tree/s3a))
+
+M5Burner ShareCode: FVom7xcBBXFo4v0z
+
 ## Console
 
 At startup, the console reads from the USBSerial input. Open `PlatformIO : Serial Console` and type on your computer. To use the M5Cardputer keyboard, type `m5key-on`. 

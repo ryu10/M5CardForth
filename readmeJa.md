@@ -18,6 +18,22 @@ M5Cardputer を使って ESP32forth コンソールを作っています。
 
 プロジェクトは [Platformio](https://platformio.org/) でビルド、書き込みできます。
 
+また後述するシェアコードを使って M5Burner からバイナリをインストールできます。
+
+## 対応モデルとインストール
+
+### Original Cardputer
+
+リリース [v0.0.9](https://github.com/ryu10/M5CardForth/releases/tag/v0.0.9) ([main](https://github.com/ryu10/M5CardForth/tree/main))
+
+M5burner ShareCode: XieOPr3qjkD2rmdY
+
+### Cardputer v1.1 / Cardputer-Adv
+
+リリース [v0.1.0s3a](https://github.com/ryu10/M5CardForth/releases/tag/v0.1.0s3a) ([s3a](https://github.com/ryu10/M5CardForth/tree/s3a))
+
+M5burner ShareCode: FVom7xcBBXFo4v0z
+
 ## コンソール
 
 初期状態で入力は Platformio Serial Monitor コンソール、出力は M5Cardputer ディスプレイです。Platformio の Serial Monitor コンソールウィンドウ内をクリックしてからコンピュータのキーボードを使って入力します。
