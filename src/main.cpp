@@ -264,9 +264,12 @@ int lcdPrint(uint8_t *s, int size){
 
 /* M5Cardputer-adv Keyboard */
 /* #include "M5Cardputer.h" // Incompatible! */
-// #include "utility/Keyboard.h"
 #include "utility/Keyboard/Keyboard.h"
+#include <memory>
 #include <Wire.h>
+// Factory for creating a TCA8418 reader is implemented in a separate TU
+// to avoid pulling in M5GFX/LovyanGFX headers into this translation unit.
+std::unique_ptr<KeyboardReader> createTCA8418Reader(int irq, int sda, int scl);
 #define SDA_PIN 8
 #define SCL_PIN 9
 #define KBD_INT_PIN 11
@@ -275,11 +278,14 @@ Keyboard_Class Keyboard = Keyboard_Class();
 String _keyboard_buf = "";
 
 void kbdInit(void){
-  Wire.begin(SDA_PIN, SCL_PIN);
-  Wire.setClock(400000);
+  // Wire.begin(SDA_PIN, SCL_PIN);
+  // Wire.setClock(400000);
   pinMode(KBD_INT_PIN, INPUT_PULLUP);
   delay(10);
-  Keyboard.begin();
+
+  std::unique_ptr<KeyboardReader> reader = createTCA8418Reader(KBD_INT_PIN, SDA_PIN, SCL_PIN);
+  Keyboard.begin(std::move(reader));
+  // Initialization complete.
 }
 
 size_t kbdGet(char *buf, int count){
@@ -3554,6 +3560,7 @@ void setup() {
   lcdGfxInit();
   kbdInit(); 
   addLeds(); // init the RGB LED
+  
   // end "for M5Cardputer"
   cell_t fh = heap_caps_get_free_size(MALLOC_CAP_INTERNAL);
   cell_t hc = heap_caps_get_largest_free_block(MALLOC_CAP_INTERNAL);
