@@ -2,6 +2,10 @@
 #pragma once
 #include <memory>
 #include "utility/Keyboard/Keyboard.h"
+// keyboard_factory.h
+#pragma once
+#include <memory>
+#include "utility/Keyboard/Keyboard.h"
 
 typedef enum {
   CARDUPTER_UNKNOWN = 0,

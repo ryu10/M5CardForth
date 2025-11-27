@@ -267,9 +267,8 @@ int lcdPrint(uint8_t *s, int size){
 #include "utility/Keyboard/Keyboard.h"
 #include <memory>
 #include <Wire.h>
-// Factory for creating a TCA8418 reader is implemented in a separate TU
-// to avoid pulling in M5GFX/LovyanGFX headers into this translation unit.
-std::unique_ptr<KeyboardReader> createTCA8418Reader(int irq, int sda, int scl);
+#include "keyboard_factory.h"
+
 #define SDA_PIN 8
 #define SCL_PIN 9
 #define KBD_INT_PIN 11
@@ -283,9 +282,10 @@ void kbdInit(void){
   pinMode(KBD_INT_PIN, INPUT_PULLUP);
   delay(10);
 
-  std::unique_ptr<KeyboardReader> reader = createTCA8418Reader(KBD_INT_PIN, SDA_PIN, SCL_PIN);
+  std::unique_ptr<KeyboardReader> reader = createKeyboardReader();
   Keyboard.begin(std::move(reader));
-  // Initialization complete.
+  // Initialization complete. createKeyboardReader() detects ADV vs v1.1 and
+  // returns the appropriate KeyboardReader (TCA8418 or IOMatrix).
 }
 
 size_t kbdGet(char *buf, int count){
