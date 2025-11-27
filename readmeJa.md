@@ -26,13 +26,13 @@ M5Cardputer を使って ESP32forth コンソールを作っています。
 
 リリース [v0.0.9](https://github.com/ryu10/M5CardForth/releases/tag/v0.0.9) ([main](https://github.com/ryu10/M5CardForth/tree/main))
 
-M5burner ShareCode: XieOPr3qjkD2rmdY
+M5burner Share Code: XieOPr3qjkD2rmdY
 
 ### Cardputer v1.1 / Cardputer-Adv
 
 リリース [v0.1.0-s3a](https://github.com/ryu10/M5CardForth/releases/tag/v0.1.0-s3a) ([s3a](https://github.com/ryu10/M5CardForth/tree/s3a))
 
-M5burner ShareCode: FVom7xcBBXFo4v0z
+M5burner Share Code: Ow3k7C9dWPOiZ7Zh
 
 ## コンソール
 
