@@ -29,7 +29,7 @@ M5Burner ShareCode: XieOPr3qjkD2rmdY
 
 ### Cardputer v1.1 / Cardputer-Adv
 
-Release [v0.1.0s3a](https://github.com/ryu10/M5CardForth/releases/tag/v0.1.0s3a) ([s3a](https://github.com/ryu10/M5CardForth/tree/s3a))
+Release [v0.1.0-s3a](https://github.com/ryu10/M5CardForth/releases/tag/v0.1.0-s3a) ([s3a](https://github.com/ryu10/M5CardForth/tree/s3a))
 
 M5Burner ShareCode: FVom7xcBBXFo4v0z
 
