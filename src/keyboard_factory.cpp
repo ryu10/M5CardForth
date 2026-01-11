@@ -24,9 +24,13 @@ std::unique_ptr<KeyboardReader> createTCA8418Reader(int irq, int sda, int scl) {
 // of a raw Wire probe so we reuse the library's initialization logic.
 std::unique_ptr<KeyboardReader> createKeyboardReader() {
        // The ADV hardware uses these pins for I2C / IRQ on Cardputer-ADV.
-       constexpr int ADV_SDA = 8;
-       constexpr int ADV_SCL = 9;
-       constexpr int ADV_IRQ = 11;
+       // modified for the external 'calc-keyboard' connected at the port2 header. 
+       // constexpr int ADV_SDA = 8;
+       // constexpr int ADV_SCL = 9;
+       // constexpr int ADV_IRQ = 11;
+       constexpr int ADV_SDA = 13;
+       constexpr int ADV_SCL = 15;
+       constexpr int ADV_IRQ = 5;
 
        // Configure M5.In_I2C to the ADV pins so the Adafruit driver uses them.
        M5.In_I2C.setPort(I2C_NUM_0, ADV_SDA, ADV_SCL);
