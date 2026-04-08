@@ -16,7 +16,7 @@ M5Cardputer を使って ESP32forth コンソールを作っています。
 * [LovyanGFX](https://github.com/lovyan03/LovyanGFX)
 * [FastLED](https://github.com/FastLED/FastLED)
 
-プロジェクトは [Platformio](https://platformio.org/) でビルド、書き込みできます。
+プロジェクトは [Platformio](https://platformio.org/) (Arduino フレームワーク) でビルド、書き込みできます。
 
 また後述するシェアコードを使って M5Burner からバイナリをインストールできます。
 

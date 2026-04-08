@@ -17,7 +17,7 @@ The following components are roughly combined:
 * [LovyanGFX](https://github.com/lovyan03/LovyanGFX)
 * [FastLED](https://github.com/FastLED/FastLED)
 
-Build / flash the project with [Platformio](https://platformio.org/).
+Build / flash the project with [Platformio](https://platformio.org/) (Arduino framework).
 
 You can also install binaries from M5Burner using the share codes below.
 
